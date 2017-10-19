@@ -10,6 +10,14 @@ procedure principale()
     k = 4;
   fintantque
 
-  siRiche
+  si (i < 14)
+    j = 2;
+  sinonsi (i = 150)
+    j = 4;
+  sinonsi (i = 15)
+    j = 10;
+  sinon
+    j = 0;
+  finsi
 finproc
 # Commentaire Final
