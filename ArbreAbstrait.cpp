@@ -76,7 +76,9 @@ NoeudInstSi::NoeudInstSi(Noeud* condition, Noeud* sequence)
 }
 
 int NoeudInstSi::executer() {
-  if (m_condition->executer()) m_sequence->executer();
+  if (m_condition->executer()) {
+    m_sequence->executer();
+  }
   return 0; // La valeur renvoyée ne représente rien !
 }
 
@@ -92,4 +94,38 @@ int NoeudInstTantQue::executer() {
       m_sequence->executer();
   }
   return 0; // La valeur renvoyée ne représente rien !
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// NoeudInstRepeter
+////////////////////////////////////////////////////////////////////////////////
+NoeudInstRepeter::NoeudInstRepeter(Noeud* condition, Noeud* sequence)
+        : m_condition(condition), m_sequence(sequence) {
+}
+
+int NoeudInstRepeter::executer() {
+  do {
+    m_sequence->executer();
+  } while (m_condition->executer());
+  return 0; // La valeur renvoyée ne représente rien !
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// NoeudInstPour
+////////////////////////////////////////////////////////////////////////////////
+NoeudInstPour::NoeudInstPour(Noeud* affect1, Noeud* expression,Noeud* sequence, Noeud* affect2)
+        : m_affect1(affect1), m_expression(expression),m_sequence(sequence), m_affect2(affect2) {
+}
+
+int NoeudInstPour::executer() {
+    if(m_affect1 == nullptr or m_affect2 == nullptr) {
+        while (m_expression) {
+            m_sequence->executer();
+        }
+    } else {
+        for (m_affect1; m_expression ; m_affect2) {
+            m_sequence->executer();
+        }
+    }
+    return 0; // La valeur renvoyée ne représente rien !
 }

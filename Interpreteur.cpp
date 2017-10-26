@@ -156,7 +156,7 @@ Noeud* Interpreteur::instTantQue() {
     testerEtAvancer(")");
     Noeud* sequence = seqInst();     // On mémorise la séquence d'instruction
     testerEtAvancer("fintantque");
-    return nullptr;
+    return new NoeudInstTantQue(condition,sequence);
 }
 
 Noeud* Interpreteur::instSiRiche() {
@@ -190,47 +190,53 @@ Noeud* Interpreteur::instRepeter() {
     testerEtAvancer("(");
     Noeud* condition = expression();
     testerEtAvancer(")");
-    return nullptr;
+    return new NoeudInstRepeter(condition,sequence);
 }
 
 Noeud*  Interpreteur::instPour() {
 //  <instPour> ::= pour ( [<affectation>] ; <expression> ; [<affectation>] ) <seqInst> finpour
     testerEtAvancer("pour");
     testerEtAvancer("(");
-    Noeud* affect= nullptr;
-    affect = affectation();
-    testerEtAvancer(";");
+    Noeud *affect = nullptr;
+    if (m_lecteur.getSymbole() != ";") {
+        affect = affectation();
+    }
+    m_lecteur.avancer();
+
     Noeud* expres = expression();
     testerEtAvancer(";");
-    Noeud* affectation2 = affectation();
-    testerEtAvancer(")");
+    Noeud *affect2 = nullptr;
+    if (m_lecteur.getSymbole() != ")") {
+        Noeud *affectation2 = affectation();
+        testerEtAvancer(")");
+    } else {
+        m_lecteur.avancer();
+    }
     Noeud* sequence = seqInst();
     testerEtAvancer("finpour");
-    return nullptr;
+    return new NoeudInstPour(affect,expres,sequence,affect2);
 }
 
 Noeud*  Interpreteur::instEcrire() {
 // <instEcrire> ::= ecrire ( <expression> | <chaine> { , <expression> | <chaine> } )
     testerEtAvancer("ecrire");
     testerEtAvancer("(");
-    //TODO Noeud* = new NoeudInstEcrire();
-    Noeud* contenu = nullptr;
+    //TODO Noeud* n = new NoeudInstEcrire();
+    vector<Noeud*> contenu;
     if(m_lecteur.getSymbole() == "<CHAINE>") {
-        contenu = m_table.chercheAjoute(m_lecteur.getSymbole());
+        contenu.push_back(m_table.chercheAjoute(m_lecteur.getSymbole()));
         m_lecteur.avancer();
     } else {
-        contenu = expression();
+        contenu.push_back(expression());
     }
-    //TODO n->ajoute(contenu)
     while (m_lecteur.getSymbole() == ",") {
         m_lecteur.avancer();
         if(m_lecteur.getSymbole() == "<CHAINE>") {
-            contenu = m_table.chercheAjoute(m_lecteur.getSymbole());
+            contenu.push_back(m_table.chercheAjoute(m_lecteur.getSymbole()));
             m_lecteur.avancer();
         } else {
-            contenu = expression();
+            contenu.push_back(expression());
         }
-        //TODO n->ajoute(contenu)
     }
     testerEtAvancer(")");
     return nullptr;
@@ -238,17 +244,17 @@ Noeud*  Interpreteur::instEcrire() {
 
 Noeud* Interpreteur::instLire() {
 // <instLire> ::= lire ( <variable> { , <variable> } )
-    Noeud* contenu = nullptr;
+    vector<Noeud*> contenu;
     testerEtAvancer("lire");
     testerEtAvancer("(");
     if(m_lecteur.getSymbole() == "<VARIABLE>") {
-            contenu = m_table.chercheAjoute(m_lecteur.getSymbole());
+            contenu.push_back(m_table.chercheAjoute(m_lecteur.getSymbole()));
             m_lecteur.avancer();
     }
     while (m_lecteur.getSymbole() == ",") {
         m_lecteur.avancer();
         if(m_lecteur.getSymbole() == "<VARIABLE>") {
-            contenu = m_table.chercheAjoute(m_lecteur.getSymbole());
+            contenu.push_back(m_table.chercheAjoute(m_lecteur.getSymbole()));
             m_lecteur.avancer();
         }
     }
