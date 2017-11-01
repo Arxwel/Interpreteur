@@ -2,6 +2,17 @@
 # Les lignes de commentaires commencent par #
 procedure principale()
   i = 12+3;
+  pour(b = 0; b<4; b=b+1)
+    j= j+1;
+  finpour
+  a=0 + 0;
+  pour(;a < 10;)
+    a = a+1;
+  finpour
+
+  ecrire("toto" , i)
+
+  lire(a, i)
 #  si (i>14)
 #    j=1;
 #  finsi
@@ -23,18 +34,5 @@ j = 1;
 #  repeter
 #    j = j+1;
 #  jusqua(j<20)
-  b = 0 + 0;
-  pour(b = 0; b<4; b=b+1)
-    b = b+2;
-  finpour
-  a=0 + 0;
-  pour(;a < 10;)
-    a = a+1;
-  finpour
-
-  ecrire("toto" , i)
-
-  lire(a, i)
-
 finproc
 # Commentaire Final

@@ -207,10 +207,10 @@ Noeud*  Interpreteur::instPour() {
     testerEtAvancer(";");
     Noeud *affect2 = nullptr;
     if (m_lecteur.getSymbole() != ")") {
-        Noeud *affectation2 = affectation();
+        affect2 = affectation();
         testerEtAvancer(")");
     } else {
-        m_lecteur.avancer();
+        testerEtAvancer(")");
     }
     Noeud* sequence = seqInst();
     testerEtAvancer("finpour");
