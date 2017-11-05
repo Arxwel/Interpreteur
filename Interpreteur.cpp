@@ -139,126 +139,161 @@ Noeud* Interpreteur::facteur() {
 
 Noeud* Interpreteur::instSi() {
   // <instSi> ::= si ( <expression> ) <seqInst> finsi
-  testerEtAvancer("si");
-  testerEtAvancer("(");
-  Noeud* condition = expression(); // On mémorise la condition
-  testerEtAvancer(")");
-  Noeud* sequence = seqInst();     // On mémorise la séquence d'instruction
-  testerEtAvancer("finsi");
-  return new NoeudInstSi(condition, sequence); // Et on renvoie un noeud Instruction Si
+  try {
+      testerEtAvancer("si");
+      testerEtAvancer("(");
+      Noeud *condition = expression(); // On mémorise la condition
+      testerEtAvancer(")");
+      Noeud *sequence = seqInst();     // On mémorise la séquence d'instruction
+      testerEtAvancer("finsi");
+      return new NoeudInstSi(condition, sequence); // Et on renvoie un noeud Instruction Si
+  }catch (exception e) {
+      cout << e.what() << endl;
+      return nullptr;
+  }
 }
 
 Noeud* Interpreteur::instTantQue() {
  // <instTantQue> ::= tantque ( <expression> ) <seqInst> fintantque
-    testerEtAvancer("tantque");
-    testerEtAvancer("(");
-    Noeud* condition = expression();
-    testerEtAvancer(")");
-    Noeud* sequence = seqInst();     // On mémorise la séquence d'instruction
-    testerEtAvancer("fintantque");
-    return new NoeudInstTantQue(condition,sequence);
+    try {
+        testerEtAvancer("tantque");
+        testerEtAvancer("(");
+        Noeud *condition = expression();
+        testerEtAvancer(")");
+        Noeud *sequence = seqInst();     // On mémorise la séquence d'instruction
+        testerEtAvancer("fintantque");
+        return new NoeudInstTantQue(condition, sequence);
+    }catch(exception e) {
+        cout << e.what() << endl;
+        return nullptr;
+    }
 }
 
 Noeud* Interpreteur::instSiRiche() {
- // <instSiRiche> ::= siRiche ( <expression> ) <seqInst> finSiRiche
-    testerEtAvancer("si");
-    testerEtAvancer("(");
-    Noeud* condition = expression();
-    testerEtAvancer(")");
-    Noeud* sequence = seqInst();     // On mémorise la séquence d'instruction
-    
-    while(m_lecteur.getSymbole() == "sinonsi") {
-      m_lecteur.avancer();
-      testerEtAvancer("(");
-      Noeud* condition2 = expression();
-      testerEtAvancer(")");
-      Noeud* sequence2 = seqInst();
-    }
-    if(m_lecteur.getSymbole() == "sinon") {
-     m_lecteur.avancer();
-     Noeud* sequence3 = seqInst();
-    } 
-    testerEtAvancer("finsi");
-    return nullptr;
-}
+    // <instSiRiche> ::= siRiche ( <expression> ) <seqInst> finSiRiche
+    try {
+        vector<NoeudInstSi *> instSi;
+        testerEtAvancer("si");
+        testerEtAvancer("(");
+        Noeud *condition = expression();
+        testerEtAvancer(")");
+        instSi.push_back(new NoeudInstSi(condition, seqInst()));
 
+        while (m_lecteur.getSymbole() == "sinonsi") {
+            m_lecteur.avancer();
+            testerEtAvancer("(");
+            condition = expression();
+            testerEtAvancer(")");
+            instSi.push_back(new NoeudInstSi(condition, seqInst()));
+        }
+        if (m_lecteur.getSymbole() == "sinon") {
+            m_lecteur.avancer();
+            instSi.push_back(new NoeudInstSi(nullptr, seqInst()));
+        }
+        testerEtAvancer("finsi");
+        return new NoeudInstSiRiche(instSi);
+    }catch (exception e) {
+        cout << e.what() << endl;
+        return nullptr;
+    }
+}
 Noeud* Interpreteur::instRepeter() {
 // <instRepeter> ::= repeter <seqInst> jusqua ( <expression> )
-    testerEtAvancer("repeter");
-    Noeud* sequence = seqInst();
-    testerEtAvancer("jusqua");
-    testerEtAvancer("(");
-    Noeud* condition = expression();
-    testerEtAvancer(")");
-    return new NoeudInstRepeter(condition,sequence);
+    try {
+        testerEtAvancer("repeter");
+        Noeud *sequence = seqInst();
+        testerEtAvancer("jusqua");
+        testerEtAvancer("(");
+        Noeud *condition = expression();
+        testerEtAvancer(")");
+        return new NoeudInstRepeter(condition, sequence);
+    } catch (exception e) {
+        cout << e.what() << endl;
+        return nullptr;
+    }
 }
 
 Noeud*  Interpreteur::instPour() {
 //  <instPour> ::= pour ( [<affectation>] ; <expression> ; [<affectation>] ) <seqInst> finpour
-    testerEtAvancer("pour");
-    testerEtAvancer("(");
-    Noeud *affect = nullptr;
-    if (m_lecteur.getSymbole() != ";") {
-        affect = affectation();
-    }
-    m_lecteur.avancer();
+    try {
+        testerEtAvancer("pour");
+        testerEtAvancer("(");
+        Noeud *affect = nullptr;
+        if (m_lecteur.getSymbole() != ";") {
+            affect = affectation();
+        }
+        m_lecteur.avancer();
 
-    Noeud* expres = expression();
-    testerEtAvancer(";");
-    Noeud *affect2 = nullptr;
-    if (m_lecteur.getSymbole() != ")") {
-        affect2 = affectation();
-        testerEtAvancer(")");
-    } else {
-        testerEtAvancer(")");
+        Noeud *expres = expression();
+        testerEtAvancer(";");
+        Noeud *affect2 = nullptr;
+        if (m_lecteur.getSymbole() != ")") {
+            affect2 = affectation();
+            testerEtAvancer(")");
+        } else {
+            testerEtAvancer(")");
+        }
+        Noeud *sequence = seqInst();
+        testerEtAvancer("finpour");
+        return new NoeudInstPour(affect, expres, sequence, affect2);
+    }catch (exception e) {
+        cout << e.what() << endl;
+        return nullptr;
     }
-    Noeud* sequence = seqInst();
-    testerEtAvancer("finpour");
-    return new NoeudInstPour(affect,expres,sequence,affect2);
 }
 
 Noeud*  Interpreteur::instEcrire() {
 // <instEcrire> ::= ecrire ( <expression> | <chaine> { , <expression> | <chaine> } )
-    testerEtAvancer("ecrire");
-    testerEtAvancer("(");
-    //TODO Noeud* n = new NoeudInstEcrire();
-    vector<Noeud*> contenu;
-    if(m_lecteur.getSymbole() == "<CHAINE>") {
-        contenu.push_back(m_table.chercheAjoute(m_lecteur.getSymbole()));
-        m_lecteur.avancer();
-    } else {
-        contenu.push_back(expression());
-    }
-    while (m_lecteur.getSymbole() == ",") {
-        m_lecteur.avancer();
-        if(m_lecteur.getSymbole() == "<CHAINE>") {
+    try {
+        testerEtAvancer("ecrire");
+        testerEtAvancer("(");
+        vector<Noeud *> contenu;
+        if (m_lecteur.getSymbole() == "<CHAINE>") {
             contenu.push_back(m_table.chercheAjoute(m_lecteur.getSymbole()));
             m_lecteur.avancer();
         } else {
             contenu.push_back(expression());
         }
+        while (m_lecteur.getSymbole() == ",") {
+            m_lecteur.avancer();
+            if (m_lecteur.getSymbole() == "<CHAINE>") {
+                contenu.push_back(m_table.chercheAjoute(m_lecteur.getSymbole()));
+                m_lecteur.avancer();
+            } else {
+                contenu.push_back(expression());
+            }
+        }
+        testerEtAvancer(")");
+        Noeud *n = new NoeudInstEcrire(contenu);
+        return n;
+    } catch (exception e) {
+        cout << e.what() << endl;
+        return nullptr;
     }
-    testerEtAvancer(")");
-    return nullptr;
 }
 
 Noeud* Interpreteur::instLire() {
 // <instLire> ::= lire ( <variable> { , <variable> } )
-    vector<Noeud*> contenu;
-    testerEtAvancer("lire");
-    testerEtAvancer("(");
-    if(m_lecteur.getSymbole() == "<VARIABLE>") {
-            contenu.push_back(m_table.chercheAjoute(m_lecteur.getSymbole()));
-            m_lecteur.avancer();
-    }
-    while (m_lecteur.getSymbole() == ",") {
-        m_lecteur.avancer();
-        if(m_lecteur.getSymbole() == "<VARIABLE>") {
+    try {
+        vector<Noeud *> contenu;
+        testerEtAvancer("lire");
+        testerEtAvancer("(");
+        if (m_lecteur.getSymbole() == "<VARIABLE>") {
             contenu.push_back(m_table.chercheAjoute(m_lecteur.getSymbole()));
             m_lecteur.avancer();
         }
+        while (m_lecteur.getSymbole() == ",") {
+            m_lecteur.avancer();
+            if (m_lecteur.getSymbole() == "<VARIABLE>") {
+                contenu.push_back(m_table.chercheAjoute(m_lecteur.getSymbole()));
+                m_lecteur.avancer();
+            }
+        }
+        testerEtAvancer(")");
+        return new NoeudInstLire(contenu);
+    }catch(exception e) {
+        cout << e.what() << endl;
+        return nullptr;
     }
-    testerEtAvancer(")");
-    return nullptr;
 }
 

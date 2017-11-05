@@ -7,6 +7,7 @@
 #include <vector>
 #include <iostream>
 #include <iomanip>
+#include <typeinfo>
 using namespace std;
 
 #include "Symbole.h"
@@ -115,14 +116,47 @@ class NoeudInstPour : public Noeud {
 
 public:
     NoeudInstPour(Noeud* affect1, Noeud* expression,Noeud* sequence, Noeud* affect2);
-    // Construit une "instruction tantque" avec sa condition et sa séquence d'instruction
-    ~NoeudInstPour() {} // A cause du destructeur virtuel de la classe Noeud
-    int executer();  // Exécute l'instruction tantque : tantque condition vraie on exécute la séquence
+    ~NoeudInstPour() {}
+    int executer();
 
 private:
     Noeud*  m_affect1;
     Noeud*  m_expression;
     Noeud*  m_sequence;
     Noeud*  m_affect2;
+};
+
+class NoeudInstEcrire : public Noeud {
+    // Classe pour représenter un noeud "instruction Ecrire"
+
+public :
+    NoeudInstEcrire(vector<Noeud*> contenu);
+    ~NoeudInstEcrire() {}
+    int executer();
+private:
+    vector<Noeud*> m_contenu;
+};
+
+class NoeudInstLire : public Noeud {
+    // Classe pour représenter un noeud "instruction Lire"
+
+public :
+    NoeudInstLire(vector<Noeud*> contenu);
+    ~NoeudInstLire() {}
+    int executer();
+private:
+    vector<Noeud*> m_contenu;
+};
+
+class NoeudInstSiRiche : public Noeud {
+    // Classe pour représenter un noeud "instruction SiRiche"
+
+public :
+    NoeudInstSiRiche(vector<NoeudInstSi *> instructions);
+    ~NoeudInstSiRiche() {}
+    int executer();
+    void ajoute(Noeud * inst);
+private:
+    vector<NoeudInstSi *> m_inst;
 };
 #endif /* ARBREABSTRAIT_H */

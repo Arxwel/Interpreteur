@@ -76,7 +76,7 @@ NoeudInstSi::NoeudInstSi(Noeud* condition, Noeud* sequence)
 }
 
 int NoeudInstSi::executer() {
-  if (m_condition->executer()) {
+  if (m_condition == nullptr||m_condition->executer()) {
     m_sequence->executer();
   }
   return 0; // La valeur renvoyée ne représente rien !
@@ -97,6 +97,23 @@ int NoeudInstTantQue::executer() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// NoeudInstSiRiche
+////////////////////////////////////////////////////////////////////////////////
+NoeudInstSiRiche::NoeudInstSiRiche(vector<NoeudInstSi *> instructions) : m_inst(instructions){}
+
+int NoeudInstSiRiche::executer() {
+    for (NoeudInstSi * inst : m_inst) {
+        if(inst->executer()) {
+            return 0;
+        }
+    }
+    return 0;
+}
+
+void NoeudInstSiRiche::ajoute(Noeud *inst) {
+    m_inst.push_back((NoeudInstSi*)inst);
+}
+////////////////////////////////////////////////////////////////////////////////
 // NoeudInstRepeter
 ////////////////////////////////////////////////////////////////////////////////
 NoeudInstRepeter::NoeudInstRepeter(Noeud* condition, Noeud* sequence)
@@ -104,9 +121,9 @@ NoeudInstRepeter::NoeudInstRepeter(Noeud* condition, Noeud* sequence)
 }
 
 int NoeudInstRepeter::executer() {
-  do {
-    m_sequence->executer();
-  } while (m_condition->executer());
+  while (!m_condition->executer()) {
+      m_sequence->executer();
+  }
   return 0; // La valeur renvoyée ne représente rien !
 }
 
@@ -119,13 +136,53 @@ NoeudInstPour::NoeudInstPour(Noeud* affect1, Noeud* expression,Noeud* sequence, 
 
 int NoeudInstPour::executer() {
     if(m_affect1 == nullptr or m_affect2 == nullptr) {
-        while (m_expression) {
+        while (m_expression->executer()) {
             m_sequence->executer();
         }
     } else {
-        for (m_affect1; m_expression ; m_affect2) {
+        for (m_affect1->executer(); m_expression->executer() ; m_affect2->executer()) {
             m_sequence->executer();
         }
+    }
+    return 0; // La valeur renvoyée ne représente rien !
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// NoeudInstEcrire
+////////////////////////////////////////////////////////////////////////////////
+NoeudInstEcrire::NoeudInstEcrire(vector<Noeud*> contenu)
+        : m_contenu(contenu) {
+}
+
+int NoeudInstEcrire::executer() {
+    for (Noeud* contenu : m_contenu) {
+        if((typeid(*contenu) == typeid(SymboleValue)) && *((SymboleValue*)contenu) == "<CHAINE>") {
+            SymboleValue *valchaine = (SymboleValue*)(contenu);
+            cout << valchaine->getChaine().substr(1,valchaine->getChaine().length()-2);
+        } else {
+            cout << contenu->executer();
+        }
+    }
+    return 0; // La valeur renvoyée ne représente rien !
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// NoeudInstLire
+////////////////////////////////////////////////////////////////////////////////
+NoeudInstLire::NoeudInstLire(vector<Noeud*> contenu)
+        : m_contenu(contenu) {
+}
+
+int NoeudInstLire::executer() {
+    for (Noeud* contenu : m_contenu) {
+        SymboleValue *valeurcontenu = (SymboleValue*)(contenu);
+        int valvar;
+
+        cout << "Saisie de la valeur de la variable " << valeurcontenu->getChaine() << " ";
+        cin >> valvar;
+        valeurcontenu->setValeur(valvar);
     }
     return 0; // La valeur renvoyée ne représente rien !
 }

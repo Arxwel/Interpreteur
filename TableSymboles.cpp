@@ -9,13 +9,25 @@ SymboleValue * TableSymboles::chercheAjoute(const Symbole & s)
 // Sinon, on insère un nouveau symbole valué correspondant à s
 // et on renvoie un pointeur sur le nouveau symbole valué inséré.
 {
+  /*
   vector<SymboleValue*>::iterator i;
   i = m_table.begin();
   while (i < m_table.end() && (**i).getChaine() < s.getChaine()) i++;
   if (i == m_table.end() || (**i).getChaine() != s.getChaine()) // si pas trouvé...
     i = m_table.insert(i, new SymboleValue(s));
   return *i;
+  */
+  SymboleValue *symbole = new SymboleValue(s);
+  for (SymboleValue *symboleval : m_table) {
+    if (symbole->getChaine() == symboleval->getChaine()) {
+      delete (symbole);
+      return symboleval;
+    }
+  }
+  m_table.push_back(symbole);
+  return symbole;
 }
+
 
 ostream & operator<<(ostream & cout, const TableSymboles & ts)
 // affiche ts sur cout

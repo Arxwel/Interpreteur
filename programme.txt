@@ -1,38 +1,20 @@
 # Fichier de test
 # Les lignes de commentaires commencent par #
 procedure principale()
-  i = 12+3;
-  pour(b = 0; b<4; b=b+1)
-    j= j+1;
-  finpour
-  a=0 + 0;
-  pour(;a < 10;)
-    a = a+1;
-  finpour
+i = 12+3;
+j=0;
 
-  ecrire("toto" , i)
+pour(b = 0; b<4; b=b+1)
+j= j+1;
+finpour
+a=0 + 0;
+pour(;a < 10;)
+a = a+1;
+finpour
 
-  lire(a, i)
-#  si (i>14)
-#    j=1;
-#  finsi
-#  si (i < 14)
-#   j = 2;
-#  sinonsi (i == 150)
-#    j = 4;
-#  sinonsi (i == 15)
-#    j = 10;
-#  sinon
-#    j = 0;
-#  finsi
-j = 1;
-#  tantque (i != 17)
-#    i = i + 1;
-#    k = 4;
-#  fintantque
+ecrire("toto"))
 
-#  repeter
-#    j = j+1;
-#  jusqua(j<20)
+ecrire("Jaime manger bio")
+
 finproc
 # Commentaire Final
