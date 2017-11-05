@@ -21,6 +21,7 @@ class Noeud {
     virtual int  executer() =0 ; // Méthode pure (non implémentée) qui rend la classe abstraite
     virtual void ajoute(Noeud* instruction) { throw OperationInterditeException(); }
     virtual ~Noeud() {} // Présence d'un destructeur virtuel conseillée dans les classes abstraites
+    virtual void traduitEnCPP(ostream &ostream, unsigned int i) const { throw OperationInterditeException();}
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -32,7 +33,7 @@ class NoeudSeqInst : public Noeud {
     ~NoeudSeqInst() {} // A cause du destructeur virtuel de la classe Noeud
     int executer();    // Exécute chaque instruction de la séquence
     void ajoute(Noeud* instruction);  // Ajoute une instruction à la séquence
-
+    void traduitEnCPP(ostream &cout, unsigned int indentation) const;
   private:
     vector<Noeud *> m_instructions; // pour stocker les instructions de la séquence
 };
@@ -45,6 +46,7 @@ class NoeudAffectation : public Noeud {
      NoeudAffectation(Noeud* variable, Noeud* expression); // construit une affectation
     ~NoeudAffectation() {} // A cause du destructeur virtuel de la classe Noeud
     int executer();        // Exécute (évalue) l'expression et affecte sa valeur à la variable
+    void traduitEnCPP(ostream &cout, unsigned int indentation) const;
 
   private:
     Noeud* m_variable;
@@ -60,6 +62,7 @@ class NoeudOperateurBinaire : public Noeud {
     // Construit une opération binaire : operandeGauche operateur OperandeDroit
    ~NoeudOperateurBinaire() {} // A cause du destructeur virtuel de la classe Noeud
     int executer();            // Exécute (évalue) l'opération binaire)
+    void traduitEnCPP(ostream &cout, unsigned int indentation) const;
 
   private:
     Symbole m_operateur;
@@ -76,6 +79,7 @@ class NoeudInstSi : public Noeud {
      // Construit une "instruction si" avec sa condition et sa séquence d'instruction
    ~NoeudInstSi() {} // A cause du destructeur virtuel de la classe Noeud
     int executer();  // Exécute l'instruction si : si condition vraie on exécute la séquence
+    void traduitEnCPP(ostream & cout, unsigned int indentation) const;
 
   private:
     Noeud*  m_condition;
@@ -90,7 +94,7 @@ class NoeudInstTantQue : public Noeud {
      // Construit une "instruction tantque" avec sa condition et sa séquence d'instruction
     ~NoeudInstTantQue() {} // A cause du destructeur virtuel de la classe Noeud
     int executer();  // Exécute l'instruction tantque : tantque condition vraie on exécute la séquence
-
+    void traduitEnCPP(ostream &cout, unsigned int indentation) const;
   private:
     Noeud*  m_condition;
     Noeud*  m_sequence;
@@ -104,7 +108,7 @@ public:
     // Construit une "instruction repeter" avec sa condition et sa séquence d'instruction
     ~NoeudInstRepeter() {} // A cause du destructeur virtuel de la classe Noeud
     int executer();  // Exécute l'instruction tantque : tantque condition vraie on exécute la séquence
-
+    void traduitEnCPP(ostream &cout, unsigned int indentation) const;
 private:
     Noeud*  m_condition;
     Noeud*  m_sequence;
@@ -118,7 +122,7 @@ public:
     NoeudInstPour(Noeud* affect1, Noeud* expression,Noeud* sequence, Noeud* affect2);
     ~NoeudInstPour() {}
     int executer();
-
+    void traduitEnCPP(ostream &cout, unsigned int indentation) const;
 private:
     Noeud*  m_affect1;
     Noeud*  m_expression;
@@ -133,6 +137,7 @@ public :
     NoeudInstEcrire(vector<Noeud*> contenu);
     ~NoeudInstEcrire() {}
     int executer();
+    void traduitEnCPP(ostream &cout, unsigned int indentation) const;
 private:
     vector<Noeud*> m_contenu;
 };
@@ -144,6 +149,7 @@ public :
     NoeudInstLire(vector<Noeud*> contenu);
     ~NoeudInstLire() {}
     int executer();
+    void traduitEnCPP(ostream &cout, unsigned int indentation) const;
 private:
     vector<Noeud*> m_contenu;
 };
@@ -156,6 +162,7 @@ public :
     ~NoeudInstSiRiche() {}
     int executer();
     void ajoute(Noeud * inst);
+    void traduitEnCPP(ostream &cout, unsigned int indentation) const;
 private:
     vector<NoeudInstSi *> m_inst;
 };

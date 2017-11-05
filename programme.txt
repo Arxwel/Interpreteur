@@ -3,7 +3,17 @@
 procedure principale()
 i = 12+3;
 j=0;
-
+lire(a)
+ecrire(j)
+tantque (i != 17)
+i = i + 1;
+k = 4;
+fintantque
+repeter
+j = j+1;
+jusqua(j>20)
+lire(k)
+ecrire(k)
 pour(b = 0; b<4; b=b+1)
 j= j+1;
 finpour
@@ -11,10 +21,7 @@ a=0 + 0;
 pour(;a < 10;)
 a = a+1;
 finpour
-
-ecrire("toto"))
-
+ecrire("toto")
 ecrire("Jaime manger bio")
-
 finproc
 # Commentaire Final
