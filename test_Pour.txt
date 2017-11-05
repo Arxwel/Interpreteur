@@ -1,0 +1,19 @@
+#test instPour
+procedure principale()
+	test2 = 2;
+
+	pour (test1 = 1; test1 <= 4; test1 = test1 + 1)
+		test2 = test2 + 2;
+	finpour
+
+	ecrire("test1", test1) #resultat attendu test1 = 4
+	ecrire("test2", test2) #resultat attendu test2 = 8
+
+	pour (;test1 > 5;)
+		test2 = 15;
+	finpour
+
+	ecrire("test1", test1) #resultat attendu test1 = 4
+	ecrire("test2", test2) #resultat attendu test2 = 8
+
+finproc

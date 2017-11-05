@@ -1,0 +1,23 @@
+#test instSiRiche
+procedure principale()
+	test1 = 1;
+	test2 = 2;
+
+	si (test1 == 1)
+		test1 = 3;
+	finsi
+
+	si (test2 == 1)
+		test2 = 4;
+	sinonsi (test1 == 1)
+		test2 = 6;
+	sinonsi (test2 == 4 ou test2 == 6)
+		test1 = 1;
+	sinonsi (test1 == 3)
+		test2 = 8;
+	finsi
+
+	ecrire("test1", test1) #resultat attendu test1 = 3
+	ecrire("test2", test2) #resultat attendu test2 = 8
+
+finproc

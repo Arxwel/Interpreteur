@@ -1,0 +1,12 @@
+#test instLire
+procedure principale()
+	test1 = 1;
+	test2 = 2;
+
+	lire (test1)
+	lire (test1, test2)
+
+	ecrire("test1", test1) #resultat attendu test1 = valeur entrer en deuxieme
+	ecrire("test2", test2) #resultat attendu test2 = valeur entrer
+
+finproc

@@ -113,7 +113,7 @@ void NoeudInstSi::traduitEnCPP(ostream & cout, unsigned int indentation) const {
     m_condition->traduitEnCPP(cout,0);
     cout << ") {" << endl;
     m_sequence->traduitEnCPP(cout,indentation+1);
-    cout << setw(4*indentation) << "" << "}" << endl;
+    cout << setw(4*indentation) << "" << "}";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -158,12 +158,12 @@ void NoeudInstSiRiche::ajoute(Noeud *inst) {
 
 void NoeudInstSiRiche::traduitEnCPP(ostream & cout, unsigned int indentation) const {
     for (NoeudInstSi * inst : m_inst) {
-        inst->traduitEnCPP(cout,0);
-        if (inst != m_inst.at(m_inst.size())-1) {
-            cout << "else ";
+        if (inst != m_inst.at(0)) {
+            cout << " else ";
         }
+        inst->traduitEnCPP(cout,0);
     }
-    cout <<""<<endl;
+    cout << endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 // NoeudInstRepeter
