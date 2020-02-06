@@ -3,7 +3,7 @@ procedure principale()
 	test1 = 1;
 	test2 = 2;
 
-	si (test1 == 1)
+	si (non test1)
 		test1 = 3;
 	finsi
 

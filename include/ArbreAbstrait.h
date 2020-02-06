@@ -22,6 +22,8 @@ class Noeud {
     virtual void ajoute(Noeud* instruction) { throw OperationInterditeException(); }
     virtual ~Noeud() {} // Présence d'un destructeur virtuel conseillée dans les classes abstraites
     virtual void traduitEnCPP(ostream &ostream, unsigned int i) const { throw OperationInterditeException();}
+    virtual void traduitEnCPP2(ostream &cout, unsigned int indentation) const { throw OperationInterditeException();}
+    virtual void traduitEnJava(ostream &ostream, unsigned int i) const {throw OperationInterditeException();}
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -47,7 +49,7 @@ class NoeudAffectation : public Noeud {
     ~NoeudAffectation() {} // A cause du destructeur virtuel de la classe Noeud
     int executer();        // Exécute (évalue) l'expression et affecte sa valeur à la variable
     void traduitEnCPP(ostream &cout, unsigned int indentation) const;
-
+    void traduitEnCPP2(ostream &cout, unsigned int indentation) const;
   private:
     Noeud* m_variable;
     Noeud* m_expression;
@@ -63,7 +65,7 @@ class NoeudOperateurBinaire : public Noeud {
    ~NoeudOperateurBinaire() {} // A cause du destructeur virtuel de la classe Noeud
     int executer();            // Exécute (évalue) l'opération binaire)
     void traduitEnCPP(ostream &cout, unsigned int indentation) const;
-
+    void traduitEnCPP2(ostream &cout, unsigned int indentation) const;
   private:
     Symbole m_operateur;
     Noeud*  m_operandeGauche;

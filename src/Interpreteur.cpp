@@ -298,9 +298,9 @@ Noeud* Interpreteur::instLire() {
 }
 
 void Interpreteur::traduitEnCPP(ostream &cout, unsigned int indentation ) const {
-    cout << setw(4*indentation) << "" << "int main() {" << endl;
-    getArbre()->traduitEnCPP(cout,indentation+1);
-    cout << setw(4*(indentation+1)) << "" << "return 0;" << endl;
-    cout << setw(4*indentation) << "}" << endl;
+    cout << setw(indentation) << "" << "int main() {" << endl;
+    getArbre()->traduitEnCPP(cout,indentation+4);
+    cout << setw(indentation+4) << "" << "return 0;" << endl;
+    cout << setw(indentation) << "}" << endl;
 }
 
