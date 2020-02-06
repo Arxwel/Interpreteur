@@ -1,17 +1,20 @@
 #include <iostream>
+#include "../include/Interpreteur.h"
+#include "../include/Exceptions.h"
 using namespace std;
-#include "Interpreteur.h"
-#include "Exceptions.h"
 
 int main(int argc, char* argv[]) {
-  string nomFich;
+  string nomFich("");
   if (argc != 2) {
     cout << "Usage : " << argv[0] << " nom_fichier_source" << endl << endl;
     cout << "Entrez le nom du fichier que voulez-vous interpréter : ";
     getline(cin, nomFich);
-  } else
+  } else {
     nomFich = argv[1];
-  ifstream fichier(nomFich.c_str());
+  }
+  //nomFich = "resources/" + nomFich;
+  ifstream fichier((nomFich).c_str(),ios::in);
+  if(!fichier || !fichier.is_open()) { std::cerr << "Could not open file" << std::endl; }
   try {
     Interpreteur interpreteur(fichier);
     interpreteur.analyse();

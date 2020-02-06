@@ -1,5 +1,5 @@
-#include "Lecteur.h"
-#include "Exceptions.h"
+#include "../include/Lecteur.h"
+#include "../include/Exceptions.h"
 #include <ctype.h>
 #include <string.h>
 #include <iostream>

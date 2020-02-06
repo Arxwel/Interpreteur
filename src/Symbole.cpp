@@ -4,7 +4,7 @@
 #include <fstream>
 using namespace std;
 
-#include "Symbole.h"
+#include "../include/Symbole.h"
 
 const char * Symbole::FICHIER_MOTS_CLES = "motsCles.txt";
 

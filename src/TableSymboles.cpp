@@ -1,4 +1,4 @@
-#include "TableSymboles.h"
+#include "../include/TableSymboles.h"
 
 TableSymboles::TableSymboles() : m_table() {
 }
